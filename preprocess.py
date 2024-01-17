@@ -130,7 +130,7 @@ def create_bigrams(words):
                 if i + k < Len:
                     lst.append(join_str.join([words[i], words[i + k]]))
     else:
-        # set it as unigram
+        # set as unigram
         lst = create_unigram(words)
     return lst
 

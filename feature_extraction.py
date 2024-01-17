@@ -40,7 +40,7 @@ def get_countVectorizer_stats():
     print("the below are the feature_names:")
     print(countV.get_feature_names_out()[:25])
 
-get_countVectorizer_stats()
+# get_countVectorizer_stats()
 
 # create tf-df frequency features
 tfidfV = TfidfTransformer()
@@ -162,3 +162,6 @@ class TfidfEmbeddingVectorizer(object):
                 for words in X
             ])
 """
+
+# end testing
+print("***************** feature_extraction finish *********************")
