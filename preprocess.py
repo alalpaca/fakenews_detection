@@ -16,6 +16,7 @@ from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 import seaborn as sb
 from nltk.corpus import stopwords
+import matplotlib as plt
 
 # before reading the files, set up the working directory to point to project repo
 # 打印当前工作目录
@@ -53,13 +54,8 @@ def data_obs():
 # data_obs()
 
 # prediction classes distribution
-def create_distribution(dataFile):
-    return sb.countplot(x='Label', data=dataFile, palette='hls')
-
-# class distribution visualize
-# create_distribution(train_news)
-# create_distribution(test_news)
-# create_distribution(valid_news)
+def create_distribution(dataFile, ax):
+    return sb.countplot(x='Label', data=dataFile, palette='hls', ax=ax)
 # test and valid data seems to be fairly evenly distributed between the classes
 
 # testing
@@ -245,11 +241,19 @@ def preprocess_data(input_filename, output_filename):
     data_obs()
 
     # Class distribution visualize
-    create_distribution(data)
+    fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+    create_distribution(train_news, axs[0])
+    axs[0].set_title('Train Data')
+    create_distribution(test_news, axs[1])
+    axs[1].set_title('Test Data')
+    create_distribution(valid_news, axs[2])
+    axs[2].set_title('Validation Data')
+    plt.tight_layout()
+    plt.show()
 
     # Data integrity check
     data_qualityCheck()
-
+    #
     # Process the data including stemming and stopwords removal
     data['text_processed'] = data['Statement'].apply(lambda x: process_and_create_ngrams(x, True, True))
 
