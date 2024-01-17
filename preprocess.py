@@ -11,12 +11,13 @@ import pandas as pd
 import csv
 import numpy as np
 import nltk
+nltk.download('treebank')
 from nltk.stem import SnowballStemmer
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
 import seaborn as sb
 from nltk.corpus import stopwords
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 # before reading the files, set up the working directory to point to project repo
 # 打印当前工作目录
@@ -54,8 +55,8 @@ def data_obs():
 # data_obs()
 
 # prediction classes distribution
-def create_distribution(dataFile, ax):
-    return sb.countplot(x='Label', data=dataFile, palette='hls', ax=ax)
+def create_distribution(dataFile):
+    return sb.countplot(x='Label', data=dataFile, palette='hls')
 # test and valid data seems to be fairly evenly distributed between the classes
 
 # testing
@@ -84,102 +85,14 @@ def data_qualityCheck():
 nltk.download('stopwords')
 eng_stemmer = SnowballStemmer('english')
 stopwords = set(nltk.corpus.stopwords.words('english'))
-'''
-
-
-# Stemming
-def stem_tokens(tokens, stemmer):
-    stemmed = []
-    for token in tokens:
-        stemmed.append(stemmer.stem(token))
-    return stemmed
-
-
-# process the data
-def process_data(data, exclude_stopword=True, stem=True):
-    tokens = [w.lower() for w in data]
-    tokens_stemmed = tokens
-    tokens_stemmed = stem_tokens(tokens, eng_stemmer)
-    tokens_stemmed = [w for w in tokens_stemmed if w not in stopwords]
-    return tokens_stemmed
-
-# creating ngrams
-# unigram
-def create_unigram(words):
-    assert type(words) == list
-    return words
-
-# bigram
-def create_bigrams(words):
-    assert type(words) == list
-    skip = 0
-    join_str = " "
-    Len = len(words)
-    if Len > 1:
-        lst = []
-        for i in range(Len - 1):
-            for k in range(1, skip + 2):
-                if i + k < Len:
-                    lst.append(join_str.join([words[i], words[i + k]]))
-    else:
-        # set it as unigram
-        lst = create_unigram(words)
-    return lst
-'''
-
-'''
-#trigrams
-def create_trigrams(words):
-    assert type(words) == list
-    skip == 0
-    join_str = " "
-    Len = len(words)
-    if L > 2:
-        lst = []
-        for i in range(1,skip+2):
-            for k1 in range(1, skip+2):
-                for k2 in range(1,skip+2):
-                    for i+k1 < Len and i+k1+k2 < Len:
-                        lst.append(join_str.join([words[i], words[i+k1],words[i+k1+k2])])
-        else:
-            #set is as bigram
-            lst = create_bigram(words)
-    return lst
-'''
 
 porter = PorterStemmer()
-
-
 def tokenizer(text):
     return text.split()
-
 
 def tokenizer_porter(text):
     return [porter.stem(word) for word in text.split()]
 
-
-# doc = ['runners like running and thus they run','this is a test for tokens']
-# tokenizer([word for line in test_news.iloc[:,1] for word in line.lower().split()])
-
-# show the distribution of labels in the train and test data
-"""def create_datafile(filename)
-    #function to slice the dataframe to keep variables necessary to be used for classification
-    return "return df to be used"
-"""
-
-"""#converting multiclass labels present in our datasets to binary class labels
-for i , row in data_TrainNews.iterrows():
-    if (data_TrainNews.iloc[:,0] == "mostly-true" | data_TrainNews.iloc[:,0] == "half-true" | data_TrainNews.iloc[:,0] == "true"):
-        data_TrainNews.iloc[:,0] = "true"
-    else :
-        data_TrainNews.iloc[:,0] = "false"
-
-for i,row in data_TrainNews.iterrows():
-    print(row)
-"""
-
-
-print("*****************testing**************")
 # Function for stemming tokens
 import nltk
 nltk.download('punkt')
@@ -241,14 +154,7 @@ def preprocess_data(input_filename, output_filename):
     data_obs()
 
     # Class distribution visualize
-    fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-    create_distribution(train_news, axs[0])
-    axs[0].set_title('Train Data')
-    create_distribution(test_news, axs[1])
-    axs[1].set_title('Test Data')
-    create_distribution(valid_news, axs[2])
-    axs[2].set_title('Validation Data')
-    plt.tight_layout()
+    create_distribution(data)
     plt.show()
 
     # Data integrity check
@@ -260,7 +166,7 @@ def preprocess_data(input_filename, output_filename):
     # Save the processed data to a new CSV file
     data.to_csv(output_filename, index=False, encoding='utf-8')
     print(f"Processed data saved to {output_filename}")
-
+"""
 # Preprocess the training data
 preprocess_data('train.csv', 'train_processed.csv')
 
@@ -269,3 +175,6 @@ preprocess_data('test.csv', 'test_processed.csv')
 
 # Preprocess the validation data
 preprocess_data('valid.csv', 'valid_processed.csv')
+"""
+
+print("********************* preprocess finish ***************************")

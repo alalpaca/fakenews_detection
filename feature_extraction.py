@@ -18,45 +18,53 @@ import nltk.corpus
 from nltk.tokenize import word_tokenize
 from gensim.models.word2vec import Word2Vec
 
+print("********* this is feature_selection_program *********")  # testing
+
 # we will start with simple bag of words technique
-# creating feature vector - document term matrix
 countV = CountVectorizer()
 train_count = countV.fit_transform(preprocess.train_news['Statement'].values)
 
+print("### the below are the countV:")
 print(countV)
+print("### the below are the train_count:")
 print(train_count)
 
-
-# print training doc term matrix
-# we have matrix of size of (10240, 12196) by calling below
+# bag of words
 def get_countVectorizer_stats():
     # vocab size
     train_count.shape
-
-    # check vocabulary using below command
+    # vocabulary checking
+    print("the below are the countV.vocabulary:")
     print(countV.vocabulary_)
+    # feature names checking
+    print("the below are the feature_names:")
+    print(countV.get_feature_names_out()[:25])
 
-    # get feature names
-    print(countV.get_feature_names()[:25])
-
+get_countVectorizer_stats()
 
 # create tf-df frequency features
-# tf-idf
 tfidfV = TfidfTransformer()
 train_tfidf = tfidfV.fit_transform(train_count)
 
-
 def get_tfidf_stats():
     train_tfidf.shape
-    # get train data feature names
+    print("train_tdidf.shape: ", train_tfidf.shape)
+    # train feature names
+    print("the below are the train_tfidf:")
     print(train_tfidf.A[:10])
 
+get_tfidf_stats()
+
+"""
+n-grams involved
+"""
 
 # bag of words - with n-grams
-# countV_ngram = CountVectorizer(ngram_range=(1,3),stop_words='english')
-# tfidf_ngram  = TfidfTransformer(use_idf=True,smooth_idf=True)
+countV_ngram = CountVectorizer(ngram_range=(1,3),stop_words='english')
+tfidf_ngram  = TfidfTransformer(use_idf=True,smooth_idf=True)
 
 tfidf_ngram = TfidfVectorizer(stop_words='english', ngram_range=(1, 4), use_idf=True, smooth_idf=True)
+
 
 # POS Tagging
 tagged_sentences = nltk.corpus.treebank.tagged_sents()
@@ -64,6 +72,7 @@ tagged_sentences = nltk.corpus.treebank.tagged_sents()
 cutoff = int(.75 * len(tagged_sentences))
 training_sentences = preprocess.train_news['Statement']
 
+print("the belows are the training_sentences:")
 print(training_sentences)
 
 
@@ -96,6 +105,8 @@ def untag(tagged_sentence):
     return [w for w, t in tagged_sentence]
 
 
+
+"""
 # Using Word2Vec
 with open("glove.6B.50d.txt", "rb") as lines:
     w2v = {line.split()[0]: np.array(map(float, line.split()[1:]))
@@ -123,30 +134,31 @@ class MeanEmbeddingVectorizer(object):
             for words in X
         ])
 
-# class TfidfEmbeddingVectorizer(object):
-#     def __init__(self, word2vec):
-#         self.word2vec = word2vec
-#         self.word2weight = None
-#         self.dim = len(word2vec.itervalues().next())
-#
-#     def fit(self, X, y):
-#         tfidf = TfidfVectorizer(analyzer=lambda x: x)
-#         tfidf.fit(X)
-#         # if a word was never seen - it must be at least as infrequent
-#         # as any of the known words - so the default idf is the max of
-#         # known idf's
-#         max_idf = max(tfidf.idf_)
-#         self.word2weight = defaultdict(
-#             lambda: max_idf,
-#             [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
-#
-#         return self
-#
-#     def transform(self, X):
-#         return np.array([
-#                 np.mean([self.word2vec[w] * self.word2weight[w]
-#                          for w in words if w in self.word2vec] or
-#                         [np.zeros(self.dim)], axis=0)
-#                 for words in X
-#             ])
+# using TF-IDF
+class TfidfEmbeddingVectorizer(object):
+    def __init__(self, word2vec):
+        self.word2vec = word2vec
+        self.word2weight = None
+        self.dim = len(word2vec.itervalues().next())
 
+    def fit(self, X, y):
+        tfidf = TfidfVectorizer(analyzer=lambda x: x)
+        tfidf.fit(X)
+        # if a word was never seen - it must be at least as infrequent
+        # as any of the known words - so the default idf is the max of
+        # known idf's
+        max_idf = max(tfidf.idf_)
+        self.word2weight = defaultdict(
+            lambda: max_idf,
+            [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
+
+        return self
+
+    def transform(self, X):
+        return np.array([
+                np.mean([self.word2vec[w] * self.word2weight[w]
+                         for w in words if w in self.word2vec] or
+                        [np.zeros(self.dim)], axis=0)
+                for words in X
+            ])
+"""

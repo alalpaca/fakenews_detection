@@ -7,7 +7,6 @@ Created on Sat Jan  13 17:45:49 2024
 """
 
 import os
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import csv
@@ -37,23 +36,6 @@ valid_news = pd.read_csv(valid_filename, encoding='utf-8')
 # testing
 print("successfully read data")
 
-# data observation
-def data_obs():
-    print("training dataset size:")
-    print(train_news.shape)
-    print(train_news.head(10))
-
-    # print(test_news.shape)
-    # print(test_news.head(10))
-
-    print(valid_news.shape)
-    print(valid_news.head(10))
-
-    # testing
-    print("successfully data_obs")
-
-data_obs()
-
 # prediction classes distribution
 def create_distribution(dataFile, ax):
     return sb.countplot(x='Label', data=dataFile, palette='hls', ax=ax)
@@ -68,16 +50,5 @@ axs[2].set_title('Validation Data')
 
 plt.tight_layout()
 plt.show()
-
-
-# class distribution visualize
-# create_distribution(train_news)
-# plt.show()
-# create_distribution(test_news)
-# plt.show()
-# create_distribution(valid_news)
-# plt.show()
-# test and valid data seems to be fairly evenly distributed between the classes
-
 # testing
 print("successfully show distribution")
